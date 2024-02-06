@@ -24,7 +24,10 @@ func TestCreate(t *testing.T) {
 
 	// Given
 	name := uuid.NewString()
-	a := item.New(name)
+	a, err := item.New(name)
+	if err != nil {
+		t.Fatal(err)
+	}
 	currentDateTime := time.Now().UTC()
 
 	// When
@@ -42,7 +45,7 @@ func TestCreate(t *testing.T) {
 	if data.ID != a.GetId().UUID().String() {
 		t.Errorf("expected %s, got %s", a.GetId().UUID().String(), data.ID)
 	}
-	
+
 	if data.Name != name {
 		t.Errorf("expected %s, got %s", name, data.Name)
 	}
@@ -52,7 +55,7 @@ func TestCreate(t *testing.T) {
 	}
 
 	if data.CreatedAt.Before(currentDateTime) == true {
-		t.Errorf("expected %s, got %s", currentDateTime, data.CreatedAt)		
+		t.Errorf("expected %s, got %s", currentDateTime, data.CreatedAt)
 	}
 
 	if data.UpdatedAt.Equal(data.CreatedAt) != true {
@@ -72,7 +75,10 @@ func TestUpdate(t *testing.T) {
 	// Given
 	beforeName := uuid.NewString()
 	afterName := uuid.NewString()
-	a := item.New(beforeName)
+	a, err := item.New(beforeName)
+	if err != nil {
+		t.Fatal(err)
+	}
 	currentDateTime := time.Now().UTC()
 	dataFormat := "2006-01-02 15:04:05.000000 +09:00"
 
@@ -100,7 +106,7 @@ func TestUpdate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if afterData.ID != beforeData.ID{
+	if afterData.ID != beforeData.ID {
 		t.Errorf("expected %s, got %s", beforeData.ID, afterData.ID)
 	}
 
@@ -132,7 +138,10 @@ func TestFind(t *testing.T) {
 
 	// Given
 	name := uuid.NewString()
-	a := item.New(name)
+	a, err := item.New(name)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// When
 	beforeFound, err := r.Find(a.GetId())

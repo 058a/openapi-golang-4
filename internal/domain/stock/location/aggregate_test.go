@@ -7,10 +7,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestNewAggregate(t *testing.T) {
+func TestNewSuccess(t *testing.T) {
 	// When
 	name := "test"
-	a := location.New(name)
+	a, err := location.New(name)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Then
 	if a.GetId().UUID() == uuid.Nil {
@@ -24,10 +27,22 @@ func TestNewAggregate(t *testing.T) {
 	}
 }
 
+func TestNewFail(t *testing.T) {
+	// When
+	name := ""
+	_, err := location.New(name)
+	if err == nil {
+		t.Errorf("validation error : %s", err)
+	}
+}
+
 func TestChangeName(t *testing.T) {
 	// Given
 	name := "test"
-	a := location.New(name)
+	a, err := location.New(name)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// When
 	a.ChangeName("test2")
@@ -41,7 +56,10 @@ func TestChangeName(t *testing.T) {
 func TestDelete(t *testing.T) {
 	// When
 	name := "test"
-	a := location.New(name)
+	a, err := location.New(name)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// When
 	a.Delete()

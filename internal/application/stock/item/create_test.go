@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 )
 
-
 func TestCreateSuccess(t *testing.T) {
 	// Setup
 	db, err := database.Open()
@@ -18,13 +17,13 @@ func TestCreateSuccess(t *testing.T) {
 	}
 	defer db.Close()
 	repository := &domain.Repository{Db: db}
-	
+
 	// Given
 	reqDto := &item.CreateRequestDto{
 		Name: uuid.NewString(),
 	}
 
-	// When	
+	// When
 	resDto, err := item.Create(reqDto, repository)
 	if err != nil {
 		t.Fatal(err)
@@ -45,12 +44,27 @@ func TestCreateSuccess(t *testing.T) {
 	}
 }
 
-func TestCreateError(t *testing.T) {	
+func TestCreateAggregateError(t *testing.T) {
 	repository := &MockRepository{}
-	
+
 	// Given
 	reqDto := &item.CreateRequestDto{
 		Name: "",
+	}
+
+	// When
+	_, err := item.Create(reqDto, repository)
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+}
+
+func TestCreateRepositoryError(t *testing.T) {
+	repository := &MockRepository{}
+
+	// Given
+	reqDto := &item.CreateRequestDto{
+		Name: "test",
 	}
 
 	// When

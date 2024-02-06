@@ -1,19 +1,26 @@
 package location
 
-import "github.com/google/uuid"
+import (
+	"fmt"
+
+	"github.com/google/uuid"
+)
 
 type Aggregate struct {
-	id   		Id
-	name 		string
+	id      Id
+	name    string
 	deleted bool
 }
 
-func New(name string) *Aggregate {
-	return &Aggregate{
-		id:   Id(uuid.New()),
-		name: name,
-		deleted: false,
+func New(name string) (*Aggregate, error) {
+	if name == "" {
+		return nil, fmt.Errorf("location name cannot be empty")
 	}
+	return &Aggregate{
+		id:      Id(uuid.New()),
+		name:    name,
+		deleted: false,
+	}, nil
 }
 
 func (a Aggregate) GetId() Id {
